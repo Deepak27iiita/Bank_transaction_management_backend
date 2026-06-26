@@ -1,0 +1,361 @@
+{
+  "info": {
+    "name": "Bank Transaction Management API",
+    "description": "Complete collection for testing all endpoints of the Bank Transaction Management System.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000",
+      "type": "string"
+    },
+    {
+      "key": "token",
+      "value": "",
+      "type": "string",
+      "description": "JWT Token for authenticated routes (Set this automatically in the login tests or paste manually)"
+    }
+  ],
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Register User",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"John Doe\",\n    \"email\": \"john@example.com\",\n    \"password\": \"password123\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/register",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "register"
+              ]
+            },
+            "description": "Registers a new user and returns a token."
+          }
+        },
+        {
+          "name": "Login User",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "if (jsonData.token) {",
+                  "    pm.environment.set(\"token\", jsonData.token);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"email\": \"john@example.com\",\n    \"password\": \"password123\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/login",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "login"
+              ]
+            },
+            "description": "Logs in an existing user and retrieves a JWT token."
+          }
+        },
+        {
+          "name": "Logout User",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/logout",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "logout"
+              ]
+            },
+            "description": "Logs out the user and blacklists the token."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Accounts",
+      "item": [
+        {
+          "name": "Create Account",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/accounts/",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "accounts",
+                ""
+              ]
+            },
+            "description": "Creates a new bank account for the logged-in user."
+          }
+        },
+        {
+          "name": "Get User Accounts",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/accounts/",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "accounts",
+                ""
+              ]
+            },
+            "description": "Retrieves all accounts belonging to the logged-in user."
+          }
+        },
+        {
+          "name": "Get Account Balance",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/accounts/balance/:accountId",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "accounts",
+                "balance",
+                ":accountId"
+              ],
+              "variable": [
+                {
+                  "key": "accountId",
+                  "value": "<YOUR_ACCOUNT_ID_HERE>",
+                  "description": "The ID of the account to fetch balance for."
+                }
+              ]
+            },
+            "description": "Fetches the current balance of a specific account."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Transactions",
+      "item": [
+        {
+          "name": "Create Transaction",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"fromAccount\": \"<SENDER_ACCOUNT_ID>\",\n    \"toAccount\": \"<RECEIVER_ACCOUNT_ID>\",\n    \"amount\": 150.50,\n    \"idempotencyKey\": \"unique-key-12345\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/transactions/",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "transactions",
+                ""
+              ]
+            },
+            "description": "Transfers money from one account to another."
+          }
+        },
+        {
+          "name": "Initial Funds (System)",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"toAccount\": \"<RECEIVER_ACCOUNT_ID>\",\n    \"amount\": 5000.00,\n    \"idempotencyKey\": \"initial-funds-123\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/transactions/system/initial-funds",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "transactions",
+                "system",
+                "initial-funds"
+              ]
+            },
+            "description": "Special route to add initial funds to an account."
+          }
+        },
+        {
+          "name": "Get Transactions",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/transactions/?page=1&limit=10",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "transactions",
+                ""
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1",
+                  "description": "Page number"
+                },
+                {
+                  "key": "limit",
+                  "value": "10",
+                  "description": "Items per page"
+                },
+                {
+                  "key": "startDate",
+                  "value": "2024-01-01",
+                  "disabled": true,
+                  "description": "Filter from this date (YYYY-MM-DD)"
+                },
+                {
+                  "key": "endDate",
+                  "value": "2024-12-31",
+                  "disabled": true,
+                  "description": "Filter up to this date (YYYY-MM-DD)"
+                }
+              ]
+            },
+            "description": "Gets all transactions associated with the user's accounts, with pagination and date filtering."
+          }
+        }
+      ]
+    }
+  ]
+}
