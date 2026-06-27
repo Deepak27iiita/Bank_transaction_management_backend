@@ -1,6 +1,5 @@
 const mongoose = require("mongoose")
-
-
+// db connection 
 
 function connectToDB() {
 
