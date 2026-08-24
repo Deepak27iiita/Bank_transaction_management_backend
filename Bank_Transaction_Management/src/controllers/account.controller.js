@@ -1,6 +1,6 @@
 const accountModel = require("../models/account.model");
 
-// handling account controller
+// handling account controller 
 async function createAccountController(req, res) {
 
     const user = req.user;
@@ -14,7 +14,7 @@ async function createAccountController(req, res) {
     })
 
 }
-
+// get user account
 async function getUserAccountsController(req, res) {
 
     const accounts = await accountModel.find({ user: req.user._id });
