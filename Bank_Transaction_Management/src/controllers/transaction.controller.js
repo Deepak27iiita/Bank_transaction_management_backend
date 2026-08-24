@@ -23,6 +23,7 @@ async function createTransaction(req, res) {
 
     /**
      * 1. Validate request
+     
      */
     const { fromAccount, toAccount, amount, idempotencyKey } = req.body
 
