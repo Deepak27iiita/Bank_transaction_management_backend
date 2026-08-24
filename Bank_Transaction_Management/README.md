@@ -11,7 +11,7 @@ The **Bank Transaction Management API** is a high-performance backend system bui
 
 ---
 
-## ✨ Core Capabilities
+## ✨ Core   Capabilities
 
 - **🔐 Advanced Security & Auth:** 
   - JWT-based authentication with token blacklisting.
