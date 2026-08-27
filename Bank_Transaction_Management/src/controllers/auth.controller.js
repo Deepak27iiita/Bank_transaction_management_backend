@@ -4,8 +4,8 @@ const emailService = require("../services/email.service")
 const tokenBlackListModel = require("../models/blackList.model")
 
 /**
-* - user register controller
-* - POST /api/auth/register
+* - user  register controller
+* - POST  /api/auth/register
 */
 async function userRegisterController(req, res) {
     const { email, password, name } = req.body
