@@ -45,7 +45,7 @@ async function userRegisterController(req, res) {
  * - User Login Controller
  * - POST /api/auth/login
   */
-
+// login controller
 async function userLoginController(req, res) {
     const { email, password } = req.body
 
